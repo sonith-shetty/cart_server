@@ -81,7 +81,7 @@ const addProduct = async (req, res) => {
         console.log(err);
     }
 
-     socket.emit('message', { status: "success", data: "data"});
+     // socket.emit('message', { status: "success", data: "data"});
 };
 
 const getProducts = async(req, res) => {
