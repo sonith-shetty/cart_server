@@ -67,10 +67,12 @@ async function socket(io) {
 
 const addProduct = async (req, res) => {
     const { cart_id, productID, productCode } = req.body;
+    console.log(req.body);
     
     const product_data = await Products.getProduct(productID);
     
     try {
+        console.log({cart_users, users_socket});
         const contact = cart_users.get(cart_id);
         const { user_bill } = users_socket.get(contact);
         const data = await user_bill.addItem({ productCode, ...product_data[0] });
