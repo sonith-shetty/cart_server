@@ -1,54 +1,76 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require("../models/user.model");
-
 const { jwt_key, jwt_expire } = require('../utils/secret.utils');
 
-const signIn = async(req, res) => {
-    const { username, contact, password, email } = req.body;
-    if(!contact || !password) {
-        return res.status(401).json({status: "error", data: "invalid credentials"});
+const signIn = async (req, res) => {
+    const { contact, password } = req.body;
+
+    if (!contact || !password) {
+        return res.status(400).json({ status: "error", data: "Invalid credentials" });
     }
-    const user = new User(username, contact, password, email);
+
+    const user = new User(null, contact, null, null); // Create user instance with contact
     const final_user = await user.getUser();
-    if(!final_user) {
-        return res.status(401).json({status: "error", data: "user not found"});
+
+    if (!final_user) {
+        return res.status(401).json({ status: "error", data: "User not found" });
     }
-    
+
     const { Customer_Name, Email, Password, Role } = final_user;
-    
-    const isUser = await bcrypt.compare(password, Password);
-    if(!isUser) {
-        return res.status(401).json({status: "error", data: "incorrect password or contact number"});
+
+    const isPasswordValid = await bcrypt.compare(password, Password);
+    if (!isPasswordValid) {
+        return res.status(401).json({ status: "error", data: "Incorrect password or contact number" });
     }
-    
-    const token = jwt.sign({username: Customer_Name, email: Email, contact, isAdmin: (Role === 'admin'?true:false) }, jwt_key, { expiresIn: jwt_expire });
+
+    const token = jwt.sign(
+        { username: Customer_Name, email: Email, contact, isAdmin: Role === 'admin' },
+        jwt_key,
+        { expiresIn: jwt_expire }
+    );
 
     return res
-    .status(200)
-    .cookie("user_access_token", token, { httpOnly: true })
-    .json({status: "success", data: "logged in successful", userInfo: { username: Customer_Name, contact, email: Email, Role }});
+        .status(200)
+        .cookie("user_access_token", token, { httpOnly: true, secure: true }) // Consider secure for HTTPS
+        .json({
+            status: "success",
+            data: "Logged in successfully",
+            userInfo: { username: Customer_Name, contact, email: Email, Role }
+        });
 }
 
-const signUp = async(req, res) => {
-    const { username, contact, password, email, adminKey } = req.body;
-    if(!username || !contact || !password || !email) {
-        return res.status(401).json({status: "error", data: "invalid credentials"});
+const signUp = async (req, res) => {
+    const { username, contact, password, email } = req.body;
+
+    if (!username || !contact || !password || !email) {
+        return res.status(400).json({ status: "error", data: "Invalid credentials" });
     }
-    
-    const user = new User(username, contact, password, email, adminKey);
+
+    const user = new User(username, contact, password, email);
     const Role = await user.create();
-   
-    const token = jwt.sign({username, email, contact, isAdmin: (Role === 'admin'?true:false) }, jwt_key, { expiresIn: jwt_expire });
+
+    const token = jwt.sign(
+        { username, email, contact, isAdmin: Role === 'admin' },
+        jwt_key,
+        { expiresIn: jwt_expire }
+    );
 
     return res
         .status(201)
-        .cookie("user_access_token", token, { httpOnly: true })
-        .json({status: "success", data: "register successful", userInfo: { username, contact, email, Role }});
+        .cookie("user_access_token", token, { httpOnly: true, secure: true }) // Consider secure for HTTPS
+        .json({
+            status: "success",
+            data: "Registration successful",
+            userInfo: { username, contact, email, Role }
+        });
 }
 
-const signOut = async(req, res) => {
-    return res.status(200).clearCookie("user_access_token").json({status: "success", data: "logged out"});
+const signOut = (req, res) => {
+    return res
+        .status(200)
+        .clearCookie("user_access_token")
+        .json({ status: "success", data: "Logged out" });
 }
 
 module.exports = {
