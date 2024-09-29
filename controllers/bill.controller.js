@@ -77,7 +77,7 @@ const addProduct = async (req, res) => {
         
         const { user_bill, socket } = users_socket.get(contact);
         const data = await user_bill.addItem({ productCode, ...product_data[0] });
-        socket.emit('message', { status: "success", data: user_bill.items});
+        socket.emit('message', { status: "success", data});
     } catch(err) {
         console.log(err);
     }
