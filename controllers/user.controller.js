@@ -32,7 +32,12 @@ const signIn = async (req, res) => {
 
     return res
         .status(200)
-        .cookie("user_access_token", token, { httpOnly: true, secure: true }) // Consider secure for HTTPS
+        .cookie("user_access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+        maxAge: 24 * 60 * 60 * 1000
+    })
         .json({
             status: "success",
             data: "Logged in successfully",
