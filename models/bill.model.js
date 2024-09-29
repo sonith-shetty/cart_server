@@ -22,7 +22,7 @@ const sql_generate = (transaction_id, contact, items) => {
         VALUES`;
     const sql_insert = items
         .map(({ Product_Name, Cost, Product_ID, Quantity }) => {
-            return `(${transaction_id+1},'${contact}','${new Date().toISOString().slice(0,10)}',${Product_ID},'${Product_Name}',${Cost}, ${Quantity})`;
+            return `(${transaction_id},'${contact}','${new Date().toISOString().slice(0,10)}',${Product_ID},'${Product_Name}',${Cost}, ${Quantity})`;
         })
         .join(',')+';';
     return prefix+sql_insert;
