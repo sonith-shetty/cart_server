@@ -22,7 +22,7 @@ const sql_generate = (transaction_id, contact, items) => {
         VALUES`;
     const sql_insert = items
         .map(({ Product_Name, Cost, Product_ID, Quantity }) => {
-            return `(${transaction_id},'${contact}','${new Date().toISOString().slice(0,10)}',${Product_ID},'${Product_Name}',${Cost}, ${Quantity})`;
+            return `(${transaction_id+1},'${contact}','${new Date().toISOString().slice(0,10)}',${Product_ID},'${Product_Name}',${Cost}, ${Quantity})`;
         })
         .join(',')+';';
     return prefix+sql_insert;
@@ -42,7 +42,7 @@ class Bill {
     async addItem(product) {
         const product_exists = this.items.find(item => item.productCode === product.productCode && item.Product_ID === product.Product_ID);
         if(product_exists) {
-            this.item = this.items.filter(item => item.productCode !== product.productCode && item.Product_ID !== product.Product_ID);
+            this.items = this.items.filter(item => item.productCode !== product.productCode && item.Product_ID !== product.Product_ID);
         } else {
             this.items.push(product);
         }
