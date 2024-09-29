@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { jwt_key } = require('./secret.utils');
 
 const auth_token_user = (req, res, next) => {
+    console.log(req.cookies);
     const { user_access_token } = req.cookies;
     if(!user_access_token) {
         throw new Error("Invalid user");
