@@ -32,7 +32,10 @@ const signIn = async (req, res) => {
 
     return res
         .status(200)
-        .cookie("user_access_token", token)
+        .cookie("user_access_token", token,{
+            sameSite:"None",
+            secure:true
+        })
         .json({
             status: "success",
             data: "Logged in successfully",
@@ -58,7 +61,10 @@ const signUp = async (req, res) => {
 
     return res
         .status(201)
-        .cookie("user_access_token", token) // Consider secure for HTTPS
+        .cookie("user_access_token", token,{
+            sameSite:"None",
+            secure:true
+        }) // Consider secure for HTTPS
         .json({
             status: "success",
             data: "Registration successful",
@@ -69,7 +75,10 @@ const signUp = async (req, res) => {
 const signOut = (req, res) => {
     return res
         .status(200)
-        .clearCookie("user_access_token")
+        .clearCookie("user_access_token",{
+            sameSite:"None",
+            secure:true
+        })
         .json({ status: "success", data: "Logged out" });
 }
 
