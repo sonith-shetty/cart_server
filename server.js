@@ -32,6 +32,7 @@ var corsOptions = {
     allowedHeaders: ["Content-Type"],
     exposedHeaders: ["set-cookie"],
 };
+app.use(billRouter);
 const io = new Server(httpServer, {
     cors: {
         origin: client_url || 'http://localhost:3000',
@@ -43,13 +44,11 @@ const io = new Server(httpServer, {
 // Socket.IO connection
 socket(io);
 
-
 app.use(cors(corsOptions))
 app.use(cookieParser());
 app.use(express.json());
 
 app.use(userRouter);
-app.use(billRouter);
 app.use(adminRouter);
 
 httpServer.listen(port, () => {
