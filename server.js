@@ -10,17 +10,19 @@ const cookieParser = require('cookie-parser');
 
 const { port, client_url } = require('./utils/secret.utils');
 const { auth_token_admin } = require('./utils/auth.util');
+const { addProduct } = require('./controllers/bill.controller');
 
 const userRouter = require('./routers/user.router');
 const adminRouter = require('./routers/admin.router');
 const billRouter = require('./routers/bill.router');
 
+app.post('/api/addproduct',addProduct);
 var whitelist = [
     client_url,
     "http://localhost:3000",
 ];
 var corsOptions = {
-    origin:"*",
+    origin:client_url || 'http://localhost:3000',
     credentials: true,
     methods: ["GET", "DELETE", "POST"],
     allowedHeaders: ["Content-Type"],
