@@ -18,6 +18,7 @@ const billRouter = require('./routers/bill.router');
 
 app.use(cookieParser());
 app.use(express.json({extended: true}));
+app.use(express.urlencoded());
 app.post('/api/addproduct',addProduct);
 var whitelist = [
     client_url,
