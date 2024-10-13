@@ -20,21 +20,11 @@ var whitelist = [
     "http://localhost:3000",
 ];
 var corsOptions = {
-    origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
     credentials: true,
     methods: ["GET", "DELETE", "POST"],
     allowedHeaders: ["Content-Type"],
     exposedHeaders: ["set-cookie"],
 };
-app.use(cookieParser());
-app.use(express.json());
-app.use(billRouter);
 const io = new Server(httpServer, {
     cors: {
         origin: client_url || 'http://localhost:3000',
@@ -47,6 +37,9 @@ const io = new Server(httpServer, {
 socket(io);
 
 app.use(cors(corsOptions))
+app.use(cookieParser());
+app.use(express.json());
+app.use(billRouter);
 
 app.use(userRouter);
 app.use(adminRouter);
