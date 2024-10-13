@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
+const { socket } = require('./controllers/bill.controller');
 
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
