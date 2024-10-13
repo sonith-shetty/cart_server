@@ -32,6 +32,8 @@ var corsOptions = {
     allowedHeaders: ["Content-Type"],
     exposedHeaders: ["set-cookie"],
 };
+app.use(cookieParser());
+app.use(express.json());
 app.use(billRouter);
 const io = new Server(httpServer, {
     cors: {
@@ -45,8 +47,6 @@ const io = new Server(httpServer, {
 socket(io);
 
 app.use(cors(corsOptions))
-app.use(cookieParser());
-app.use(express.json());
 
 app.use(userRouter);
 app.use(adminRouter);
