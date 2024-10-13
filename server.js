@@ -17,7 +17,7 @@ const adminRouter = require('./routers/admin.router');
 const billRouter = require('./routers/bill.router');
 
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({extended: true}));
 app.post('/api/addproduct',addProduct);
 var whitelist = [
     client_url,
