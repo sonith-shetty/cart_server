@@ -20,6 +20,7 @@ var whitelist = [
     "http://localhost:3000",
 ];
 var corsOptions = {
+    origin:"*",
     credentials: true,
     methods: ["GET", "DELETE", "POST"],
     allowedHeaders: ["Content-Type"],
