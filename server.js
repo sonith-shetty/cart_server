@@ -16,6 +16,8 @@ const userRouter = require('./routers/user.router');
 const adminRouter = require('./routers/admin.router');
 const billRouter = require('./routers/bill.router');
 
+app.use(cookieParser());
+app.use(express.json());
 app.post('/api/addproduct',addProduct);
 var whitelist = [
     client_url,
@@ -40,8 +42,6 @@ const io = new Server(httpServer, {
 socket(io);
 
 app.use(cors(corsOptions))
-app.use(cookieParser());
-app.use(express.json());
 app.use(billRouter);
 
 app.use(userRouter);
