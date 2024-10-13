@@ -32,7 +32,6 @@ var corsOptions = {
     allowedHeaders: ["Content-Type"],
     exposedHeaders: ["set-cookie"],
 };
-const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
     cors: {
         origin: client_url || 'http://localhost:3000',
