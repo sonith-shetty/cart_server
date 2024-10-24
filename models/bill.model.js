@@ -105,6 +105,10 @@ class Bill {
             bill_of_all
         };
     }
+    static async getUserPurchasedProducts(contact){
+		const [data, _] = await pool.execute(`SELECT * FROM all_bills WHERE Contact_Number=${contact};`);
+		return data;
+	}
 
 }
 

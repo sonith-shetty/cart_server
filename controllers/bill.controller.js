@@ -67,7 +67,7 @@ const addProduct = async (req, res) => {
     try {
         const contact = cart_users.get(cart_id);
         const user = users_socket.get(contact);
-        
+
         if (user) {
             const { user_bill, socket } = user;
             const data = await user_bill.addItem({ productCode, ...product_data[0] });
@@ -88,4 +88,41 @@ const getProducts = async (req, res) => {
     return res.status(200).json({ data });
 };
 
-module.exports = { socket, addProduct, getProducts };
+async function getMostBoughtProductClass(all_user_purchased_products) {
+    const all_products = await Products.getProducts();
+    let product_buy_count = {};
+    all_products.forEach(product => {
+        product_buy_count[product.Product_ID] = 0;
+    });
+    all_user_purchased_products.forEach(product => {
+        product_buy_count[product.Product_ID] += 1;
+    });
+    let max = 0;
+    let max_product_id = 0;
+    for (let product_id in product_buy_count) {
+        if (product_buy_count[product_id] > max) {
+            max = product_buy_count[product_id];
+            max_product_id = product_id;
+        }
+    }
+    const most_bought = all_products.find(product => product.Product_ID.toString() === max_product_id.toString());
+    return most_bought.prod_group;
+}
+
+const getSuggestions = async (req, res) => {
+    try {
+        const all_user_purchased_products = await Bill.getUserPurchasedProducts(req.user.contact);
+        const suggestion_group = await getMostBoughtProductClass(all_user_purchased_products)
+        console.log(suggestion_group)
+
+        const data = await Products.getProductsByGroup(suggestion_group);
+
+        return res.status(200).json({ data });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ status: "error", message: 'Internal server error, failed to retrive suggestions' });
+    }
+};
+
+module.exports = { socket, addProduct, getProducts, getSuggestions };

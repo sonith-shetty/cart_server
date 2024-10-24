@@ -34,6 +34,10 @@ class Products {
     static async deleteProducts() {
         await pool.execute(`DELETE FROM all_products`);
     }
+    static async getProductsByGroup(group) {
+		const [data, _] = await pool.execute(`SELECT * FROM all_products WHERE prod_group='${group}'`);
+		return data;
+	}
 }
 
 module.exports = Products;
