@@ -20,6 +20,7 @@ async function socket(io) {
         socket.on('join-cart', ({ contact, cart_id }) => {
             if (!cart_users.has(cart_id)) {
                 cart_users.set(cart_id, contact);
+                socket.emit("message",{status:"success", data:"cart assigned"})
             }
         });
 
@@ -67,6 +68,7 @@ const addProduct = async (req, res) => {
     try {
         const contact = cart_users.get(cart_id);
         const user = users_socket.get(contact);
+        console.log({contact,user,cart_id})
 
         if (user) {
             const { user_bill, socket } = user;

@@ -40,9 +40,9 @@ class Bill {
     }
 
     async addItem(product) {
-        const product_exists = this.items.find(item => item.productCode === product.productCode && item.Product_ID === product.Product_ID);
+        const product_exists = this.items.find(item => item.productCode === product.productCode && item.Product_ID.toString() === product.Product_ID.toString());
         if(product_exists) {
-            this.items = this.items.filter(item => item.productCode !== product.productCode && item.Product_ID !== product.Product_ID);
+            this.items = this.items.filter(item =>  item.Product_ID.toString() !== product.Product_ID.toString());
         } else {
             this.items.push(product);
         }
